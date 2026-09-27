@@ -1,0 +1,9 @@
+# Personal authorization files must never be published.
+/KEY
+/KEY.*
+*.log
+*.old
+.DS_Store
+# Saved authorization and local credential files.
+k2eudic.lua
+lic

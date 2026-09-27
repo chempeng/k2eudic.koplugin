@@ -1,0 +1,79 @@
+-- SPDX-License-Identifier: GPL-3.0-or-later
+local GetText = require("gettext")
+
+-- English source strings with bundled Simplified Chinese translations.
+-- Keep these local: changing KOReader's gettext domain would affect other UI.
+local zh = {
+    ["Add to Eudic vocabulary"] = "添加至欧路生词本",
+    ["Cannot read KEY. Place a plain text file named KEY (no extension) next to main.lua in the plugin folder."] = "无法读取 KEY 文件。请将名为 KEY（无扩展名）的纯文本文件放在插件目录中，与 main.lua 同级。",
+    ["KEY is empty, unreadable, or too large. It must contain only one line of Eudic authorization."] = "KEY 文件为空、无法读取或内容过长。请只填写一行欧路授权信息。",
+    ["Invalid KEY format. Use UTF-8 plain text with one line containing your NIS authorization or token."] = "KEY 格式不正确。请使用 UTF-8 纯文本，只填写一行 NIS 授权信息或令牌。",
+    ["Cancel"] = "取消",
+    ["OK"] = "确定",
+    ["Eudic authorization (NIS … or token)"] = "欧路授权信息（NIS … 或令牌）",
+    ["Authorization must not be empty or contain line breaks or spaces within the token."] = "授权信息不能为空，也不能包含换行或令牌内部空格。",
+    ["A request is in progress. Please wait."] = "请求正在进行，请稍候。",
+    ["Please wait 3 seconds before trying again."] = "操作太快，请等待 3 秒再试。",
+    ["The request could not be processed. Check KOReader compatibility and try again."] = "请求处理异常，请检查 KOReader 兼容性后重试。",
+    ["Please set your Eudic authorization first."] = "请先设置欧路授权信息。",
+    ["Fetching Eudic notebooks…"] = "正在获取欧路生词本…",
+    ["No English notebooks found. Create one in Eudic, then fetch the list again."] = "没有找到英语生词本，请先在欧路中创建生词本，再重新获取。",
+    ["Choose an English notebook"] = "选择英语生词本",
+    ["Select a word or phrase (up to 200 bytes), not a whole paragraph."] = "请选择单词或短语（最多 200 字节），不要选择整段文字。",
+    ["Edit the word or phrase to add"] = "编辑要添加的单词或短语",
+    ["Enter a word or phrase (up to 200 bytes)."] = "请输入单词或短语（最多 200 字节）。",
+    ["Set your authorization and choose a target notebook in the Eudic vocabulary menu first."] = "请先在“欧路生词本”设置中填写授权信息，并获取、选择目标生词本。",
+    ["Adding to Eudic vocabulary…"] = "正在添加至欧路生词本…",
+    ["Eudic vocabulary"] = "欧路生词本",
+    ["Import authorization from KEY"] = "从 KEY 导入授权",
+    ["Authorization imported from KEY. Check your target notebook. You can now delete KEY."] = "已从 KEY 导入授权。请确认目标生词本；导入后可删除 KEY 文件。",
+    ["Edit before adding"] = "添加前编辑单词",
+    ["Add a word manually…"] = "手动添加单词…",
+    ["Add an English word or phrase"] = "添加英文单词或短语",
+    ["Clear saved authorization"] = "清除已保存的授权",
+    ["Usage"] = "使用说明",
+    ["1. Get your personal authorization at my.eudic.net/OpenAPI/Authorization.\n"] = "1. 在 my.eudic.net/OpenAPI/Authorization 获取个人授权信息。\n",
+    ["2. Enter your authorization, then select Target notebook to fetch and choose a notebook online.\n"] = "2. 输入授权，再点击目标生词本，联网获取并选择。\n",
+    ["3. Under Long-press on text, select Ask with popup dialog and uncheck Dictionary on single word selection.\n"] = "3. 在阅读设置的“长按文本”中选择“弹出菜单”，取消“选择单个词时查词典”。\n",
+    ["4. Long-press a word and tap Add to Eudic vocabulary. You can also keep dictionary lookup enabled and hold longer to show the menu.\n\n"] = "4. 长按单词，点击“添加至欧路生词本”。也可保持词典设置，用更长时间按住来显示菜单。\n\n",
+    ["Alternatively, create KEY in the plugin folder with one line of authorization. It is imported automatically when no authorization is saved. Use Import authorization from KEY to replace saved authorization.\n\n"] = "也可在插件目录新建 KEY 文件，填写一行授权，首次启动自动导入。已有授权时，可用“从 KEY 导入授权”主动替换。\n\n",
+    ["Only selected text is added; word forms are not converted and context is not uploaded. Do not share KEY or settings/k2eudic.lua."] = "仅添加选中文本；不自动提取原形或上传上下文。请勿分享 KEY 或 settings/k2eudic.lua。",
+    ["Authorization is invalid or expired. Please enter your Eudic authorization again."] = "授权无效或已过期，请重新填写欧路授权信息。",
+    ["Invalid request parameters. Fetch and select a notebook again (HTTP 400)."] = "请求参数有误，请重新获取并选择生词本（HTTP 400）。",
+    ["API endpoint or notebook not found. Fetch the notebook list again (HTTP 404)."] = "接口或生词本不存在，请重新获取生词本（HTTP 404）。",
+    ["The API returned a redirect. The request was stopped. Check your plugin version."] = "接口发生重定向，已停止请求，请检查插件版本。",
+    ["Network request failed. Check your connection, device clock, and HTTPS support."] = "网络请求失败，请检查联网状态、设备时间与 HTTPS 支持。",
+    ["Please set valid Eudic authorization first."] = "请先设置有效的欧路授权信息。",
+    ["Could not encode the request data."] = "无法编码请求数据。",
+    ["Eudic returned an unexpected data format. The result could not be confirmed."] = "欧路返回的数据格式异常，无法确认操作结果。",
+    ["Eudic did not return a notebook list."] = "欧路未返回生词本列表。",
+    ["Unexpected notebook data format. Check the API version."] = "生词本数据格式异常，请检查接口版本。",
+    ["Select a word or phrase (up to 200 bytes)."] = "请选择单词或短语（最多 200 字节）。",
+    ["Please choose a target notebook first."] = "请先选择目标生词本。",
+    ["Eudic vocabulary (K2Eudic)"] = "欧路生词本 (K2Eudic)",
+    ["Add English words or phrases selected in KOReader to a chosen Eudic vocabulary notebook."] = "将 KOReader 选中的英文单词或短语添加到指定欧路生词本。",
+    ["Submitted: %s\nNotebook: %s\nEudic automatically skips existing words."] = "已提交：%s\n生词本：%s\n欧路会自动跳过已有单词。",
+    ["The addition could not be confirmed. Retry from the plugin menu; the original notebook will be used."] = "未确认添加成功。可在插件菜单中重试；重试仍使用原生词本。",
+    ["Authorization: %s"] = "授权信息：%s",
+    ["Set"] = "已设置",
+    ["Not set"] = "未设置",
+    ["Target notebook: %s"] = "目标生词本：%s",
+    ["Not selected"] = "未选择",
+    ["Retry: %s to %s"] = "重试：%s 至 %s",
+    ["Retry last failed addition"] = "重试上次失败的添加",
+    ["Eudic denied access or received too many requests. Try again later (HTTP %s)."] = "欧路拒绝访问或请求过于频繁，请稍后再试（HTTP %s）。",
+    ["Eudic returned HTTP %s. Please try again later."] = "欧路服务返回 HTTP %s，请稍后重试。",
+}
+
+return function(message, ...)
+    -- Use the active UI locale, including KOReader's system-language detection.
+    -- Chinese locales use Simplified Chinese; other locales fall back to English.
+    local language = (GetText.current_lang or "en"):lower()
+    if language == "zh" or language:match("^zh[_%-]") then
+        message = zh[message] or message
+    end
+    if select("#", ...) > 0 then
+        return string.format(message, ...)
+    end
+    return message
+end
