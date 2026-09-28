@@ -9,6 +9,7 @@ local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local Client = require("k2eudic.client")
 local Text = require("k2eudic.text")
+local UpdateUI = require("k2eudic.updateui")
 local _ = require("k2eudic.i18n")
 
 local BUTTON_ID = "90_k2eudic_add"
@@ -16,10 +17,11 @@ local PLUGIN_DIR = debug.getinfo(1, "S").source:match("^@(.+)/[^/]+$") or "."
 local K2Eudic = WidgetContainer:extend{
     name = "k2eudic",
     is_doc_only = false,
-    version = "0.3.0",
+    version = "0.3.1",
 }
 
 function K2Eudic:init()
+    self.path = self.path or PLUGIN_DIR
     self.settings = LuaSettings:open(DataStorage:getSettingsDir() .. "/k2eudic.lua")
     self.authorization = self.settings:readSetting("authorization", "")
     self.category_id = self.settings:readSetting("category_id")
@@ -31,6 +33,8 @@ function K2Eudic:init()
         self:importKey()
     end
     self.ui.menu:registerToMainMenu(self)
+    self.update_ui = UpdateUI:new(self)
+    self.update_ui:scheduleAutoCheck()
     if self.ui.highlight and self.ui.highlight.addToHighlightDialog then
         self.ui.highlight:addToHighlightDialog(BUTTON_ID, function(highlight)
             return {
@@ -56,8 +60,8 @@ function K2Eudic:saveSettings()
     self.settings:flush()
 end
 
-function K2Eudic:info(text)
-    UIManager:show(InfoMessage:new{ text = text })
+function K2Eudic:info(text, timeout)
+    UIManager:show(InfoMessage:new{ text = text, timeout = timeout })
 end
 
 function K2Eudic:setAuthorization(authorization)
@@ -203,7 +207,7 @@ function K2Eudic:sendWord(word, retry)
             if result then
                 self.last_failed = nil
                 self:info(_("Submitted: %s\nNotebook: %s\nEudic automatically skips existing words.",
-                    target.word, target.name or target.id))
+                    target.word, target.name or target.id), 3)
             else
                 self.last_failed = target
                 self:info(err .. "\n" .. _("The addition could not be confirmed. Retry from the plugin menu; the original notebook will be used."))
@@ -214,6 +218,7 @@ end
 function K2Eudic:addToMainMenu(menu_items)
     menu_items.k2eudic = {
         text = _("Eudic vocabulary"),
+        sorting_hint = "tools",
         sub_item_table = {
             { text_func = function()
                 return _("Authorization: %s", Text.authorization(self.authorization) and _("Set") or _("Not set"))
@@ -260,6 +265,9 @@ function K2Eudic:addToMainMenu(menu_items)
                 os.remove(DataStorage:getSettingsDir() .. "/k2eudic.lua.old")
                 if menu then menu:updateItems() end
             end },
+            { text = _("Plugin updates"), sub_item_table_func = function()
+                return self.update_ui:menu()
+            end },
             { text = _("Usage"), callback = function()
                 self:info(_("1. Get your personal authorization at my.eudic.net/OpenAPI/Authorization.\n")
                     .. _("2. Enter your authorization, then select Target notebook to fetch and choose a notebook online.\n")
@@ -274,6 +282,7 @@ end
 
 function K2Eudic:onCloseWidget()
     self.closed = true
+    if self.update_ui then self.update_ui:cancelAutoCheck() end
     if self.ui.highlight and self.ui.highlight.removeFromHighlightDialog then
         self.ui.highlight:removeFromHighlightDialog(BUTTON_ID)
     end

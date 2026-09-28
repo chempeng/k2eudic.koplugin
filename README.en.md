@@ -38,7 +38,7 @@ Common locations are `koreader/plugins/` on Kindle and `.adds/koreader/plugins/`
 
 ## 2. Choose a notebook
 
-Connect your device to the internet. Open **Eudic vocabulary** in the tools menu, sometimes under **More tools**, and select **Target notebook**. Choose an English vocabulary notebook from the list.
+Connect your device to the internet. Open **Eudic vocabulary** in the top tools menu and select **Target notebook**. Choose an English vocabulary notebook from the list.
 
 To use a new notebook, create it in Eudic first, then fetch the list again.
 
@@ -49,7 +49,7 @@ Open an English book. In KOReader's reading settings, under **Long-press on text
 - Select **Ask with popup dialog**.
 - Uncheck **Dictionary on single word selection**.
 
-Long-press a word, then tap **Add to Eudic vocabulary**. After **Submitted** appears, sync Eudic to see the word. Existing words are skipped automatically.
+Long-press a word, then tap **Add to Eudic vocabulary**. After **Submitted** appears, sync Eudic to see the word. Existing words are skipped automatically. The success message closes after 3 seconds, or you can tap to dismiss it sooner. Error messages stay open so you can read them.
 
 ## Useful options
 
@@ -64,6 +64,16 @@ Long-press a word, then tap **Add to Eudic vocabulary**. After **Submitted** app
 Once imported, authorization is saved in KOReader's settings, so **you can delete `KEY` from the device**. After choosing **Clear saved authorization**, restarting will not automatically import the remaining `KEY` again. You can still import it manually when needed.
 
 Do not share or upload your personal `KEY`, `settings/k2eudic.lua`, or their backups. Git ignores `KEY`, but you must also remove it before manually creating an archive to share.
+
+## Updating
+
+Open **Eudic vocabulary → Plugin updates → Check for updates**. When a new version is available, choose **Download and install**, then restart KOReader.
+
+By default, the plugin checks once a day when it starts with an internet connection. You can turn off **Automatically check daily**. Downloads are verified before installation; if activation fails, the updater attempts to restore the previous version.
+
+**You do not need to enter authorization again after updating.** Authorization and your target notebook are stored outside the plugin folder in `settings/k2eudic.lua`. In-app updates also keep your existing `KEY`. Manually replacing the plugin folder preserves saved settings too; keep KOReader's `settings/` directory.
+
+If your older version has no update menu, [install the latest release](https://github.com/chempeng/k2eudic.koplugin/releases/latest) manually once to enable in-app updates.
 
 Requires an internet connection and selectable text. Scanned PDFs without a text layer cannot be used directly. Adding words to a real Eudic account has been verified with KOReader v2026.07.1 on desktop.
 
